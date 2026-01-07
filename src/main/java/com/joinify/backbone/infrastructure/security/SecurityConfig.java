@@ -7,6 +7,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configure(http))
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -38,9 +40,10 @@ public class SecurityConfig {
 //                .authorizeHttpRequests(auth ->
 //                    auth.requestMatchers("/auth/login", "/auth/register").permitAll().anyRequest().authenticated()
 //                )
-                .oauth2ResourceServer(oauth -> oauth
-                        .jwt()   // <--- ACTIVAMOS VALIDACIÓN DE TOKENS JWT
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(jwt -> {})
                 )
+//                .oauth2ResourceServer(oauth2 -> oauth2.jwt())   // <--- ACTIVAMOS VALIDACIÓN DE TOKENS JWT
 //                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
