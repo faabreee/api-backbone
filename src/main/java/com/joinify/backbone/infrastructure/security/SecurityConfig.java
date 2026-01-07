@@ -22,7 +22,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtRequestFilter jwtRequestFilter;
+//    private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,9 +33,15 @@ public class SecurityConfig {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth ->
-                    auth.requestMatchers("/auth/login", "/auth/register").permitAll().anyRequest().authenticated()
+                        auth.anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//                .authorizeHttpRequests(auth ->
+//                    auth.requestMatchers("/auth/login", "/auth/register").permitAll().anyRequest().authenticated()
+//                )
+                .oauth2ResourceServer(oauth -> oauth
+                        .jwt()   // <--- ACTIVAMOS VALIDACIÓN DE TOKENS JWT
+                )
+//                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

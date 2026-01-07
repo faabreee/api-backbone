@@ -29,18 +29,20 @@ public class AuthController {
         ResponseDto<AuthResponse> responseDto = new ResponseDto<>();
 
         try {
-            AuthResponse authResponse = authService.login(authRequest);
+//            AuthResponse authResponse = authService.login(authRequest);
 
             responseDto.setCode(ResponseDtoCode.SUCCESS.getCode());
             responseDto.setMessage("Login realizado correctamente!");
-            responseDto.setResponse(authResponse);
+//            responseDto.setResponse(authResponse);
 
             return ResponseEntity.status(HttpStatus.OK.value()).body(responseDto);
         } catch (AuthenticationException e) {
+            System.out.println("Error de autenticación: " + e);
             responseDto.setCode(ResponseDtoCode.ERROR.getCode());
             responseDto.setMessage("Credenciales inválidas");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto);
         } catch (Exception e) {
+            System.out.println("Error de autenticación: " + e);
             responseDto.setCode(ResponseDtoCode.ERROR.getCode());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
         }
@@ -57,11 +59,11 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
             }
 
-            AuthResponse authResponse = authService.register(authRequest);
+//            AuthResponse authResponse = authService.register(authRequest);
 
             responseDto.setCode(ResponseDtoCode.SUCCESS.getCode());
             responseDto.setMessage("Usuario registrado correctamente!");
-            responseDto.setResponse(authResponse);
+//            responseDto.setResponse(authResponse);
 
             return ResponseEntity.status(HttpStatus.OK.value()).body(responseDto);
         } catch (Exception e) {

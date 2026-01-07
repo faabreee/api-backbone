@@ -17,7 +17,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public Usuario save(Usuario user) {
         UserEntity userEntity = userDboMapper.toDbo(user);
-        userEntity = userJpaRepository.save(userEntity);
+        userEntity = userJpaRepository.saveAndFlush(userEntity);
         return userDboMapper.toDomain(userEntity);
     }
 
