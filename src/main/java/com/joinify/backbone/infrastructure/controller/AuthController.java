@@ -7,6 +7,8 @@ import com.joinify.backbone.infrastructure.dto.response.AuthResponse;
 import com.joinify.backbone.infrastructure.dto.response.ResponseDto;
 import com.joinify.backbone.infrastructure.validator.AuthValidator;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,8 @@ public class AuthController {
     private final AuthValidator authValidator;
     private final AuthService authService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<AuthResponse>> createToken(@RequestBody AuthRequest authRequest) {
         ResponseDto<AuthResponse> responseDto = new ResponseDto<>();
@@ -35,16 +39,23 @@ public class AuthController {
             responseDto.setMessage("Login realizado correctamente!");
 //            responseDto.setResponse(authResponse);
 
-            return ResponseEntity.status(HttpStatus.OK.value()).body(responseDto);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(responseDto);
         } catch (AuthenticationException e) {
-            System.out.println("Error de autenticación: " + e);
-            responseDto.setCode(ResponseDtoCode.ERROR.getCode());
-            responseDto.setMessage("Credenciales inválidas");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto);
+            logger.error("Error en la autenticación: {}", e.getMessage());
+
+            responseDto.errorAuth(ResponseDtoCode.ERROR.getCode(), "Credenciales inválidas");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(responseDto);
         } catch (Exception e) {
-            System.out.println("Error de autenticación: " + e);
-            responseDto.setCode(ResponseDtoCode.ERROR.getCode());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
+            logger.error(e.getMessage(), e);
+
+            responseDto.errorGeneral(ResponseDtoCode.ERROR.getCode(), e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(responseDto);
         }
     }
 

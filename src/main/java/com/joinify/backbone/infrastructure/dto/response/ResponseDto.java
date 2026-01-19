@@ -14,4 +14,14 @@ public class ResponseDto<T> {
     private Integer status;
 
     public ResponseDto() {};
+
+    public void errorAuth(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public void errorGeneral(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }
