@@ -2,14 +2,14 @@ spring:
   application:
     name: backbone
   datasource:
-    url: jdbc:mysql://localhost:3309/joinify
-    username: root
-    password: 1970
+    url: jdbc:mysql://${BD_HOST}:${BD_PORT}/${BD_NAME}
+    username: ${BD_USERNAME:root}
+    password: ${BD_PASSWORD:12345}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: ${SHOW_SQL:false}
     properties:
       hibernate:
         format_sql: true
@@ -17,7 +17,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8081/oauth2/jwks
+          jwk-set-uri: ${API_AUTHORA_URL}/oauth2/jwks
 
 server:
-  port: 8082
+  port: ${APP_PORT:8082}
